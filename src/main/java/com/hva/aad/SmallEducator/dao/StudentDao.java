@@ -1,9 +1,10 @@
 package com.hva.aad.SmallEducator.dao;
 
-import com.hva.aad.SmallEducator.models.ClassModel;
+import com.hva.aad.SmallEducator.models.StudentModel;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ClassDao extends CrudRepository<ClassModel, Long> {
+public interface StudentDao extends CrudRepository<StudentModel, Long> {
 }
+
