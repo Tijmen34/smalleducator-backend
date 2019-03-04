@@ -1,6 +1,8 @@
 package com.hva.aad.SmallEducator.controllers;
 
 import com.hva.aad.SmallEducator.models.CourseModel;
+import com.hva.aad.SmallEducator.requestmodels.CourseStudentAPIModel;
+import com.hva.aad.SmallEducator.requestmodels.CreateCourseModel;
 import com.hva.aad.SmallEducator.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,8 +36,18 @@ public class CourseController {
      * @param courseModel request object containing information of the course.
      * @return course id if the course was successfully created.
      */
-    @PostMapping(value = "/class")
-    public ResponseEntity<?> createClass(@RequestBody CourseModel courseModel) {
+    @PostMapping(value = "/course")
+    public ResponseEntity<?> createClass(@RequestBody CreateCourseModel courseModel) {
         return courseService.createCourse(courseModel);
+    }
+
+    /**
+     * Endpoint to add a student to a course.
+     * @param courseStudentAPIModel request object containing information about the course and the student.
+     * @return the entry code if the student was successfully added.
+     */
+    @PostMapping(value = "/course/student")
+    public ResponseEntity<?> addStudentToCourse(@RequestBody CourseStudentAPIModel courseStudentAPIModel) {
+        return courseService.addStudentToCourse(courseStudentAPIModel);
     }
 }

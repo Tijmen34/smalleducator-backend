@@ -5,5 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CourseStudentDao extends CrudRepository<CourseStudentModel, Long> {
+public interface CourseStudentDao extends CrudRepository<CourseStudentModel, Integer> {
+    Boolean existsByCourse_IdAndStudent_Id(int course_id, int student_id);
 }

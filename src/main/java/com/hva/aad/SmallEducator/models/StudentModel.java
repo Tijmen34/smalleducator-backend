@@ -1,6 +1,8 @@
 package com.hva.aad.SmallEducator.models;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -12,7 +14,9 @@ import java.util.Set;
  * @author Tijmen Stor & Burak Inan
  */
 @Entity
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "\"Student\"")
 public class StudentModel implements Serializable {
 

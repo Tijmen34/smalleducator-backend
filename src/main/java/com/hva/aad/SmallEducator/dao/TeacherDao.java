@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TeacherDao extends CrudRepository<TeacherModel, Long> {
+public interface TeacherDao extends CrudRepository<TeacherModel, Integer> {
 }

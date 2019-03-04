@@ -1,9 +1,13 @@
 package com.hva.aad.SmallEducator.models;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Model for the teacher entity
@@ -11,7 +15,9 @@ import java.io.Serializable;
  * @author Tijmen Stor & Burak Inan
  */
 @Entity
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "\"Teacher\"")
 public class TeacherModel implements Serializable {
 
@@ -29,5 +35,7 @@ public class TeacherModel implements Serializable {
     @Column(name="mail_address")
     private String mailAddress;
 
+    @OneToMany(mappedBy = "teacher")
+    private Set<CourseModel> courseList = new HashSet<>();
 
 }

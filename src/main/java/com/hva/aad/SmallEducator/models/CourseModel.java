@@ -1,5 +1,8 @@
 package com.hva.aad.SmallEducator.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,7 +15,9 @@ import java.util.Set;
  * @author Tijmen Stor & Burak Inan
  */
 @Entity
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "\"Course\"")
 public class CourseModel implements Serializable {
 
@@ -29,6 +34,10 @@ public class CourseModel implements Serializable {
 
     @Column(name = "description")
     private String courseDescription;
+
+    @ManyToOne
+    @JoinColumn(name = "teacher_id", nullable = false)
+    private TeacherModel teacher;
 
     @OneToMany(mappedBy = "course")
     private Set<CourseStudentModel> students = new HashSet<>();
