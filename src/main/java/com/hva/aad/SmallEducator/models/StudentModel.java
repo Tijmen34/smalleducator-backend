@@ -10,7 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Value
-@Table(name = "Student")
+@Table(name = "\"Student\"")
 public class StudentModel {
 
     @Id
