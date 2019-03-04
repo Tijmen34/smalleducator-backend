@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 /**
  * Service for the teacher property to communicate with the repository.
- * TODO: Create the logic for routes.
  *
  * @author Burak Inan & Tijmen Stor
  */

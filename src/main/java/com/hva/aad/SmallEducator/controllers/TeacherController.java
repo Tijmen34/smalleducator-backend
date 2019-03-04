@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Controller to receive HTTP requests on the teacher property.
- * TODO: Fix teacher registering route
  *
  * @author Tijmen Stor & Burak Inan
  */

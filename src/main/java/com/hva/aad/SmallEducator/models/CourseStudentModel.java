@@ -4,10 +4,15 @@ import lombok.Value;
 
 import javax.persistence.*;
 
+/**
+ * Model for the CourseStudent entity
+ *
+ * @author Tijmen Stor & Burak Inan
+ */
 @Entity
 @Value
 @Table(name = "\"Course_has_Student\"")
-public class StudentCourseModel {
+public class CourseStudentModel {
 
     @Id
     @GeneratedValue

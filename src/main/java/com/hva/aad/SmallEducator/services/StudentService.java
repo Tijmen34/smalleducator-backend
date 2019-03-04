@@ -2,6 +2,7 @@ package com.hva.aad.SmallEducator.services;
 
 import com.hva.aad.SmallEducator.dao.StudentDao;
 import com.hva.aad.SmallEducator.models.StudentModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class StudentService {
 
     private final StudentDao studentDao;
 
+    @Autowired
     public StudentService(final StudentDao studentDao) {
         this.studentDao = studentDao;
     }

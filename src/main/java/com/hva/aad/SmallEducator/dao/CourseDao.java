@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CourseDao extends CrudRepository<CourseModel, Long> {
+    Boolean existsByCourseCode(String courseCode);
 }

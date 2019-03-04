@@ -3,9 +3,7 @@ package com.hva.aad.SmallEducator.models;
 import lombok.Value;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,5 +31,5 @@ public class StudentModel implements Serializable {
     private String mailAddress;
 
     @OneToMany(mappedBy = "student")
-    private Set<StudentCourseModel> courses = new HashSet<>();
+    private Set<CourseStudentModel> courses = new HashSet<>();
 }
