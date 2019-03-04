@@ -1,5 +1,8 @@
 package com.hva.aad.SmallEducator.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Value;
 
 import javax.persistence.*;
@@ -10,7 +13,9 @@ import javax.persistence.*;
  * @author Tijmen Stor & Burak Inan
  */
 @Entity
-@Value
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "\"Course_has_Student\"")
 public class CourseStudentModel {
 
