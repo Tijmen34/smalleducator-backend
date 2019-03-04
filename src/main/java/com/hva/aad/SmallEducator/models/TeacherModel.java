@@ -3,6 +3,7 @@ package com.hva.aad.SmallEducator.models;
 import lombok.Value;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Model for the teacher entity
@@ -12,11 +13,12 @@ import javax.persistence.*;
 @Entity
 @Value
 @Table(name = "\"Teacher\"")
-public class TeacherModel {
+public class TeacherModel implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    @Column(name = "teacher_id")
+    private int id;
 
     @Column(name="first_name")
     private String firstName;

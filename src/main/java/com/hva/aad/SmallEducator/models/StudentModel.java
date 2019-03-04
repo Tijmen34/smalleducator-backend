@@ -2,6 +2,11 @@ package com.hva.aad.SmallEducator.models;
 
 import lombok.Value;
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Model for the student entity
@@ -11,11 +16,12 @@ import javax.persistence.*;
 @Entity
 @Value
 @Table(name = "\"Student\"")
-public class StudentModel {
+public class StudentModel implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    @Column(name = "student_id")
+    private int id;
 
     @Column(name="first_name")
     private String firstName;
@@ -25,4 +31,7 @@ public class StudentModel {
 
     @Column(name="mail_address")
     private String mailAddress;
+
+    @OneToMany(mappedBy = "student")
+    private Set<StudentCourseModel> courses = new HashSet<>();
 }
