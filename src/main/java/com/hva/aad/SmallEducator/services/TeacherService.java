@@ -20,10 +20,17 @@ public class TeacherService {
 
     @Autowired
     public TeacherService(final TeacherDao teacherDao) {
-        this.teacherDao= teacherDao;
+        this.teacherDao = teacherDao;
     }
 
     public ResponseEntity<?> createTeacher(TeacherModel teacherModel) {
-        return new ResponseEntity<>("Successfully created teacher.", HttpStatus.OK);
+        if (teacherModel.getFirstName() == null ||
+                teacherModel.getLastName() == null ||
+                teacherModel.getMailAddress() == null) {
+            return new ResponseEntity<>("Not all fields are provided", HttpStatus.BAD_REQUEST);
+        } else {
+            teacherDao.save(teacherModel);
+            return new ResponseEntity<>(teacherModel.getId(), HttpStatus.OK);
+        }
     }
 }
