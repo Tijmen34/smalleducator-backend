@@ -17,11 +17,18 @@ public class StudentService {
 
     private final StudentDao studentDao;
 
-    public StudentService (final StudentDao studentDao) {
+    public StudentService(final StudentDao studentDao) {
         this.studentDao = studentDao;
     }
 
     public ResponseEntity<?> createStudent(final StudentModel studentModel) {
-        return new ResponseEntity<>("Successfully created student.", HttpStatus.OK);
+        if (studentModel.getFirstName() == null ||
+                studentModel.getLastName() == null ||
+                studentModel.getMailAddress() == null) {
+            return new ResponseEntity<>("Not all fields are provided", HttpStatus.BAD_REQUEST);
+        } else {
+            studentDao.save(studentModel);
+            return new ResponseEntity<>(studentModel.getId(), HttpStatus.OK);
+        }
     }
 }

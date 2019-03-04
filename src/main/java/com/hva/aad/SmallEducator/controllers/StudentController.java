@@ -27,6 +27,7 @@ public class StudentController {
         this.studentService = studentService;
     }
 
+
     /**
      * Endpoint to create a student.
      * @param studentModel request object containing information of the student.
