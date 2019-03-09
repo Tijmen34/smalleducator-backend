@@ -5,7 +5,6 @@ import com.hva.aad.SmallEducator.requestmodels.CreateCourseModel;
 import com.hva.aad.SmallEducator.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +45,6 @@ public class CourseController {
      * @param courseStudentAPIModel request object containing information about the course and the student.
      * @return the entry code if the student was successfully added.
      */
-    @CrossOrigin(origins = {"http://smalleducator.ml", "https://smalleducator.ml"})
     @PostMapping(value = "/course/student")
     public ResponseEntity<?> addStudentToCourse(@RequestBody CourseStudentAPIModel courseStudentAPIModel) {
         return courseService.addStudentToCourse(courseStudentAPIModel);
