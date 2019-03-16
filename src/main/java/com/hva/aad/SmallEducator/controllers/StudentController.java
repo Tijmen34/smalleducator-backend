@@ -4,10 +4,7 @@ import com.hva.aad.SmallEducator.models.StudentModel;
 import com.hva.aad.SmallEducator.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -43,5 +40,10 @@ public class StudentController {
     @PostMapping(value = "/student/{entryCode}")
     public ResponseEntity<?> checkEntryCode(@PathVariable("entryCode") String entryCode) {
         return studentService.checkEntryCode(entryCode);
+    }
+
+    @GetMapping(value = "/students")
+    public ResponseEntity<?> getAllStudents() {
+        return studentService.getAllStudents();
     }
 }

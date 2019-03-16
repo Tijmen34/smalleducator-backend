@@ -61,4 +61,8 @@ public class StudentService {
             }
         }
     }
+
+    public ResponseEntity<?> getAllStudents() {
+        return new ResponseEntity<>(studentRepository.findAll(), HttpStatus.OK);
+    }
 }

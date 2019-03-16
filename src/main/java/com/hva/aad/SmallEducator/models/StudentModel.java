@@ -1,5 +1,7 @@
 package com.hva.aad.SmallEducator.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,5 +37,6 @@ public class StudentModel implements Serializable {
     private String mailAddress;
 
     @OneToMany(mappedBy = "student")
+    @JsonIgnore
     private Set<CourseStudentModel> courses = new HashSet<>();
 }
