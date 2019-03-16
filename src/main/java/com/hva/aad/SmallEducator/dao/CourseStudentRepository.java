@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface CourseStudentDao extends CrudRepository<CourseStudentModel, Integer> {
+public interface CourseStudentRepository extends CrudRepository<CourseStudentModel, Integer> {
     Boolean existsByCourse_IdAndStudent_Id(int course_id, int student_id);
     Optional<CourseStudentModel> findByStudentEntryCode(String studentEntryCode);
 }

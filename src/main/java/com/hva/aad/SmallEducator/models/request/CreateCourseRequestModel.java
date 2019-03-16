@@ -1,9 +1,9 @@
-package com.hva.aad.SmallEducator.requestmodels;
+package com.hva.aad.SmallEducator.models.request;
 
 import lombok.Value;
 
 @Value
-public class CreateCourseModel {
+public class CreateCourseRequestModel {
     private String courseName;
     private String courseCode;
     private String courseDescription;

@@ -1,10 +1,10 @@
 package com.hva.aad.SmallEducator.services;
 
-import com.hva.aad.SmallEducator.dao.CourseStudentDao;
-import com.hva.aad.SmallEducator.dao.StudentDao;
+import com.hva.aad.SmallEducator.dao.CourseStudentRepository;
+import com.hva.aad.SmallEducator.dao.StudentRepository;
 import com.hva.aad.SmallEducator.models.CourseStudentModel;
 import com.hva.aad.SmallEducator.models.StudentModel;
-import com.hva.aad.SmallEducator.requestmodels.CourseStudentResponseModel;
+import com.hva.aad.SmallEducator.models.response.CourseStudentResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +21,13 @@ import java.util.Optional;
 @Service
 public class StudentService {
 
-    private final StudentDao studentDao;
-    private final CourseStudentDao courseStudentDao;
+    private final StudentRepository studentRepository;
+    private final CourseStudentRepository courseStudentRepository;
 
     @Autowired
-    public StudentService(final StudentDao studentDao, final CourseStudentDao courseStudentDao) {
-        this.studentDao = studentDao;
-        this.courseStudentDao = courseStudentDao;
+    public StudentService(final StudentRepository studentRepository, final CourseStudentRepository courseStudentRepository) {
+        this.studentRepository = studentRepository;
+        this.courseStudentRepository = courseStudentRepository;
     }
 
     public ResponseEntity<?> createStudent(final StudentModel studentModel) {
@@ -36,7 +36,7 @@ public class StudentService {
                 studentModel.getMailAddress() == null) {
             return new ResponseEntity<>("Not all fields are provided", HttpStatus.BAD_REQUEST);
         } else {
-            studentDao.save(studentModel);
+            studentRepository.save(studentModel);
             return new ResponseEntity<>(studentModel.getId(), HttpStatus.OK);
         }
     }
@@ -45,7 +45,7 @@ public class StudentService {
         if (entryCode == null) {
             return new ResponseEntity<>("No code provided!", HttpStatus.BAD_REQUEST);
         } else {
-            final Optional<CourseStudentModel> courseStudentModel = courseStudentDao.findByStudentEntryCode(entryCode);
+            final Optional<CourseStudentModel> courseStudentModel = courseStudentRepository.findByStudentEntryCode(entryCode);
             if (!courseStudentModel.isPresent()) {
                 return new ResponseEntity<>("Server failed to retrieve information", HttpStatus.INTERNAL_SERVER_ERROR);
             } else {

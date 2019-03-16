@@ -26,6 +26,12 @@ public class TeacherModel implements Serializable {
     @Column(name = "teacher_id")
     private int id;
 
+    @Column(name="username", unique = true)
+    private String username;
+
+    @Column(name="password")
+    private String password;
+
     @Column(name="first_name")
     private String firstName;
 

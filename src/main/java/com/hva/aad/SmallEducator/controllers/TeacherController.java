@@ -1,11 +1,13 @@
 package com.hva.aad.SmallEducator.controllers;
 
 import com.hva.aad.SmallEducator.models.TeacherModel;
+import com.hva.aad.SmallEducator.models.request.TeacherLoginRequestModel;
 import com.hva.aad.SmallEducator.services.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Tijmen Stor & Burak Inan
  */
+@RequestMapping("teacher")
 @RestController
 public class TeacherController {
 
@@ -36,8 +39,13 @@ public class TeacherController {
      * @param teacherModel contains information about the new teacher.
      * @return teacher ID if the teacher is successfully created.
      */
-    @PostMapping(value = "/teacher")
+    @PostMapping(value = "/")
     public ResponseEntity<?> createTeacher(@RequestBody TeacherModel teacherModel) {
         return teacherService.createTeacher(teacherModel);
+    }
+
+    @PostMapping(value = "/login")
+    public ResponseEntity<?> loginTeacher(@RequestBody TeacherLoginRequestModel teacherLoginRequestModel) {
+        return teacherService.loginTeacher(teacherLoginRequestModel);
     }
 }

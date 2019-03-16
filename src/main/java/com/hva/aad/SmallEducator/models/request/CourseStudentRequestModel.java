@@ -1,4 +1,4 @@
-package com.hva.aad.SmallEducator.requestmodels;
+package com.hva.aad.SmallEducator.models.request;
 
 import lombok.Value;
 
@@ -8,7 +8,7 @@ import lombok.Value;
  * @author Tijmen Stor & Burak Inan
  */
 @Value
-public class CourseStudentAPIModel {
+public class CourseStudentRequestModel {
     private int courseId;
     private int studentId;
 }

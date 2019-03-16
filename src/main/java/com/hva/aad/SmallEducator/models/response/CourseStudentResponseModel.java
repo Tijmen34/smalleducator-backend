@@ -1,4 +1,4 @@
-package com.hva.aad.SmallEducator.requestmodels;
+package com.hva.aad.SmallEducator.models.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
