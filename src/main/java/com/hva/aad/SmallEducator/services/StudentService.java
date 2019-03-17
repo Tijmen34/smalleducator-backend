@@ -31,35 +31,33 @@ public class StudentService {
     }
 
     public ResponseEntity<?> createStudent(final StudentModel studentModel) {
-        if (studentModel.getFirstName() == null ||
-                studentModel.getLastName() == null ||
-                studentModel.getMailAddress() == null) {
+        if (studentModel.getFirstName() == null || studentModel.getLastName() == null || studentModel.getMailAddress() == null) {
             return new ResponseEntity<>("Not all fields are provided", HttpStatus.BAD_REQUEST);
-        } else {
-            studentRepository.save(studentModel);
-            return new ResponseEntity<>(studentModel.getId(), HttpStatus.OK);
         }
+
+        studentRepository.save(studentModel);
+        return new ResponseEntity<>(studentModel.getId(), HttpStatus.OK);
     }
 
     public ResponseEntity<?> checkEntryCode(String entryCode) {
         if (entryCode == null) {
             return new ResponseEntity<>("No code provided!", HttpStatus.BAD_REQUEST);
-        } else {
-            final Optional<CourseStudentModel> courseStudentModel = courseStudentRepository.findByStudentEntryCode(entryCode);
-            if (!courseStudentModel.isPresent()) {
-                return new ResponseEntity<>("Server failed to retrieve information", HttpStatus.INTERNAL_SERVER_ERROR);
-            } else {
-                final CourseStudentResponseModel courseStudentResponseModel = CourseStudentResponseModel
-                        .builder()
-                        .courseCode(courseStudentModel.get().getCourse().getCourseCode())
-                        .courseName(courseStudentModel.get().getCourse().getCourseName())
-                        .courseDescription(courseStudentModel.get().getCourse().getCourseDescription())
-                        .firstName(courseStudentModel.get().getStudent().getFirstName())
-                        .lastName(courseStudentModel.get().getStudent().getLastName())
-                        .build();
-                return new ResponseEntity<>(courseStudentResponseModel, HttpStatus.OK);
-            }
         }
+
+        final Optional<CourseStudentModel> courseStudentModel = courseStudentRepository.findByStudentEntryCode(entryCode);
+        if (!courseStudentModel.isPresent()) {
+            return new ResponseEntity<>("Server failed to retrieve information", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        final CourseStudentResponseModel courseStudentResponseModel = CourseStudentResponseModel
+                .builder()
+                .courseCode(courseStudentModel.get().getCourse().getCourseCode())
+                .courseName(courseStudentModel.get().getCourse().getCourseName())
+                .courseDescription(courseStudentModel.get().getCourse().getCourseDescription())
+                .firstName(courseStudentModel.get().getStudent().getFirstName())
+                .lastName(courseStudentModel.get().getStudent().getLastName())
+                .build();
+        return new ResponseEntity<>(courseStudentResponseModel, HttpStatus.OK);
     }
 
     public ResponseEntity<?> getAllStudents() {
