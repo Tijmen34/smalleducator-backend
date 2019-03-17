@@ -1,5 +1,9 @@
 package com.hva.aad.SmallEducator.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,9 +41,12 @@ public class CourseModel implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "teacher_id", nullable = false)
+    @JsonIgnoreProperties("courseList")
     private TeacherModel teacher;
 
     @OneToMany(mappedBy = "course")
+    @JsonIgnoreProperties({"id", "course", "studentEntryCode"})
+    @JsonBackReference
     private Set<CourseStudentModel> students = new HashSet<>();
 
 }

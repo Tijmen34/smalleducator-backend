@@ -1,6 +1,9 @@
 package com.hva.aad.SmallEducator.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +26,7 @@ public class CourseStudentModel {
     @Id
     @GeneratedValue
     @Column(name = "course_student_id")
+    @JsonIgnore
     private int id;
 
     @ManyToOne(
@@ -30,7 +34,8 @@ public class CourseStudentModel {
             cascade = CascadeType.ALL
     )
     @JoinColumn(name = "student_id", referencedColumnName = "student_id")
-    @JsonIgnoreProperties("courses ")
+    @JsonIgnoreProperties("courses")
+    @JsonManagedReference
     private StudentModel student;
 
     @ManyToOne(
@@ -39,6 +44,7 @@ public class CourseStudentModel {
     )
     @JoinColumn(name = "course_id", referencedColumnName = "course_id")
     @JsonIgnoreProperties("students")
+    @JsonManagedReference
     private CourseModel course;
 
     @Column(name = "entry_code")

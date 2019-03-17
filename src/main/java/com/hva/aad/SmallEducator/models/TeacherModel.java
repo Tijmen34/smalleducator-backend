@@ -1,5 +1,8 @@
 package com.hva.aad.SmallEducator.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,9 +30,11 @@ public class TeacherModel implements Serializable {
     private int id;
 
     @Column(name="username", unique = true)
+    @JsonIgnore
     private String username;
 
     @Column(name="password")
+    @JsonIgnore
     private String password;
 
     @Column(name="first_name")
@@ -42,6 +47,7 @@ public class TeacherModel implements Serializable {
     private String mailAddress;
 
     @OneToMany(mappedBy = "teacher")
+    @JsonIgnoreProperties("teacher")
     private Set<CourseModel> courseList = new HashSet<>();
 
 }

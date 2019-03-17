@@ -15,8 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Service for the course property to communicate with the repository.
@@ -93,5 +92,13 @@ public class CourseService {
         final CourseStudentModel newCourseStudentModel = new CourseStudentModel(0, studentModel.get(), courseModel.get(), UUID.randomUUID().toString());
         courseStudentRepository.save(newCourseStudentModel);
         return new ResponseEntity<>(newCourseStudentModel.getStudentEntryCode(), HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> getCoursesByTeacher(int teacherId) {
+        Optional<List<CourseModel>> courseList = courseRepository.findAllByTeacherId(teacherId);
+        if (!courseList.isPresent()) {
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(courseList, HttpStatus.OK);
     }
 }

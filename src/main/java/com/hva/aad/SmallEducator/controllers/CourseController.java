@@ -5,9 +5,7 @@ import com.hva.aad.SmallEducator.models.request.CreateCourseRequestModel;
 import com.hva.aad.SmallEducator.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -48,5 +46,13 @@ public class CourseController {
     @PostMapping(value = "/course/student")
     public ResponseEntity<?> addStudentToCourse(@RequestBody CourseStudentRequestModel courseStudentRequestModel) {
         return courseService.addStudentToCourse(courseStudentRequestModel);
+    }
+
+    /**
+     * Endpoint to retrieve all the courses.
+     */
+    @GetMapping(value = "/courses/{teacherId}")
+    public ResponseEntity<?> getCoursesByTeacher(@PathVariable int teacherId) {
+        return courseService.getCoursesByTeacher(teacherId);
     }
 }
