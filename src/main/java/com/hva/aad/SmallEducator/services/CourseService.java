@@ -40,53 +40,58 @@ public class CourseService {
     }
 
     public ResponseEntity<?> createCourse(final CreateCourseRequestModel courseModel) {
-        if (courseModel.getCourseName() == null ||
-                courseModel.getCourseCode() == null ||
-                courseModel.getCourseDescription() == null) {
+        if (courseModel.getCourseName() == null || courseModel.getCourseCode() == null
+                || courseModel.getCourseDescription() == null) {
             return new ResponseEntity<>("Not all fields are provided", HttpStatus.BAD_REQUEST);
-        } else {
-            if (courseRepository.existsByCourseCode(courseModel.getCourseCode())) {
-                return new ResponseEntity<>("Course Code already exists.", HttpStatus.CONFLICT);
-            } else {
-                final Optional<TeacherModel> teacherModel = teacherRepository.findById(courseModel.getTeacherId());
-                if (!teacherModel.isPresent()) {
-                    return new ResponseEntity<>("Server failed to retrieve information.", HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-                final CourseModel newCourse = new CourseModel(0, courseModel.getCourseName(),
-                        courseModel.getCourseCode(), courseModel.getCourseDescription(),
-                        teacherModel.get(), null);
-                courseRepository.save(newCourse);
-                return new ResponseEntity<>(newCourse.getId(), HttpStatus.OK);
-            }
         }
+
+        if (courseRepository.existsByCourseCode(courseModel.getCourseCode())) {
+            return new ResponseEntity<>("Course Code already exists.", HttpStatus.CONFLICT);
+        }
+
+        final Optional<TeacherModel> teacherModel = teacherRepository.findById(courseModel.getTeacherId());
+        if (!teacherModel.isPresent()) {
+            return new ResponseEntity<>("Server failed to retrieve information.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        final CourseModel newCourse = new CourseModel(0, courseModel.getCourseName(),
+                courseModel.getCourseCode(), courseModel.getCourseDescription(),
+                teacherModel.get(), null);
+        courseRepository.save(newCourse);
+        return new ResponseEntity<>(newCourse.getId(), HttpStatus.OK);
+
+
     }
 
     public ResponseEntity<?> addStudentToCourse(final CourseStudentRequestModel courseStudentRequestModel) {
-        if (courseStudentRequestModel.getCourseId() == 0 || courseStudentRequestModel.getStudentId() == 0) {
+        if (courseStudentRequestModel.getCourseId() == 0
+                || courseStudentRequestModel.getStudentId() == 0) {
             return new ResponseEntity<>("Not all fields are provided", HttpStatus.BAD_REQUEST);
-        } else {
-            if (!studentRepository.existsById(courseStudentRequestModel.getStudentId())) {
-                return new ResponseEntity<>("Student not found.", HttpStatus.NOT_FOUND);
-            } else {
-                if (!courseRepository.existsById(courseStudentRequestModel.getCourseId())) {
-                    return new ResponseEntity<>("Course not found.", HttpStatus.NOT_FOUND);
-                } else {
-                    if (courseStudentRepository.existsByCourse_IdAndStudent_Id(courseStudentRequestModel.getCourseId(),
-                            courseStudentRequestModel.getStudentId())) {
-                        return new ResponseEntity<>("Student already belongs to the course", HttpStatus.CONFLICT);
-                    } else {
-                        final Optional<CourseModel> courseModel = courseRepository.findById(courseStudentRequestModel.getCourseId());
-                        final Optional<StudentModel> studentModel = studentRepository.findById(courseStudentRequestModel.getStudentId());
-
-                        if (!courseModel.isPresent() || !studentModel.isPresent()) {
-                            return new ResponseEntity<>("Server failed to retrieve information.", HttpStatus.INTERNAL_SERVER_ERROR);
-                        }
-                        final CourseStudentModel newCourseStudentModel = new CourseStudentModel(0, studentModel.get(), courseModel.get(), UUID.randomUUID().toString());
-                        courseStudentRepository.save(newCourseStudentModel);
-                        return new ResponseEntity<>(newCourseStudentModel.getStudentEntryCode(), HttpStatus.OK);
-                    }
-                }
-            }
         }
+
+        if (!studentRepository.existsById(courseStudentRequestModel.getStudentId())) {
+            return new ResponseEntity<>("Student not found.", HttpStatus.NOT_FOUND);
+        }
+
+        if (!courseRepository.existsById(courseStudentRequestModel.getCourseId())) {
+            return new ResponseEntity<>("Course not found.", HttpStatus.NOT_FOUND);
+        }
+
+        if (courseStudentRepository.existsByCourse_IdAndStudent_Id(courseStudentRequestModel.getCourseId(),
+                courseStudentRequestModel.getStudentId())) {
+            return new ResponseEntity<>("Student already belongs to the course", HttpStatus.CONFLICT);
+        }
+
+        final Optional<CourseModel> courseModel = courseRepository.findById(courseStudentRequestModel.getCourseId());
+        final Optional<StudentModel> studentModel = studentRepository.findById(courseStudentRequestModel.getStudentId());
+
+        if (!courseModel.isPresent()
+                || !studentModel.isPresent()) {
+            return new ResponseEntity<>("Server failed to retrieve information.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        final CourseStudentModel newCourseStudentModel = new CourseStudentModel(0, studentModel.get(), courseModel.get(), UUID.randomUUID().toString());
+        courseStudentRepository.save(newCourseStudentModel);
+        return new ResponseEntity<>(newCourseStudentModel.getStudentEntryCode(), HttpStatus.OK);
     }
 }

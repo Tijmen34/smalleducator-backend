@@ -8,9 +8,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   datasource:
-    url: jdbc:mysql://localhost:3306/smalleducator
-    username: wild-username
-    password: wild-password
+    url: jdbc:mysql://tijmen.dev:3306/smalleducator
+    username: smalleducator
+    password: wild-smalleducator-1234
 server:
   servlet:
     context-path: /api
