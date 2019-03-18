@@ -37,7 +37,7 @@ public class TeacherController {
     /**
      * Endpoint to create a teacher.
      *
-     * @param teacherModel contains information about the new teacher.
+     * @param createTeacherRequestModel contains information about the new teacher.
      * @return teacher ID if the teacher is successfully created.
      */
     @PostMapping(value = "/")

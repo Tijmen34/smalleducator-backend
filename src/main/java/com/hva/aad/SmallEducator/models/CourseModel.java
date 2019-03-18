@@ -45,7 +45,6 @@ public class CourseModel implements Serializable {
     private TeacherModel teacher;
 
     @OneToMany(mappedBy = "course")
-    @JsonIgnoreProperties({"id", "course", "studentEntryCode"})
     @JsonBackReference
     private Set<CourseStudentModel> students = new HashSet<>();
 

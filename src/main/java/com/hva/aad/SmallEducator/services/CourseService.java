@@ -10,6 +10,7 @@ import com.hva.aad.SmallEducator.models.request.CourseStudentRequestModel;
 import com.hva.aad.SmallEducator.models.CourseStudentModel;
 import com.hva.aad.SmallEducator.models.StudentModel;
 import com.hva.aad.SmallEducator.models.request.CreateCourseRequestModel;
+import com.hva.aad.SmallEducator.models.response.CourseListResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -99,6 +100,33 @@ public class CourseService {
         if (!courseList.isPresent()) {
             return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
-        return new ResponseEntity<>(courseList, HttpStatus.OK);
+        List<CourseListResponseModel> newCourseList = new ArrayList<>();
+        for (int i = 0; i < courseList.get().size(); i++) {
+            Optional<List<CourseStudentModel>> courseStudentModels = courseStudentRepository.findAllByCourse_Id(courseList.get().get(i).getId());
+            if (!courseStudentModels.isPresent()) {
+                CourseListResponseModel courseListResponseModel = CourseListResponseModel.builder()
+                        .id(courseList.get().get(i).getId())
+                        .courseName(courseList.get().get(i).getCourseName())
+                        .courseCode(courseList.get().get(i).getCourseCode())
+                        .courseDescription(courseList.get().get(i).getCourseDescription())
+                        .students(new ArrayList<>())
+                        .build();
+                newCourseList.add(courseListResponseModel);
+            } else {
+                List<StudentModel> studentList = new ArrayList<>();
+                for (int j = 0; j < courseStudentModels.get().size(); j++) {
+                    studentList.add(courseStudentModels.get().get(j).getStudent());
+                }
+                CourseListResponseModel courseListResponseModel = CourseListResponseModel.builder()
+                        .id(courseList.get().get(i).getId())
+                        .courseName(courseList.get().get(i).getCourseName())
+                        .courseCode(courseList.get().get(i).getCourseCode())
+                        .courseDescription(courseList.get().get(i).getCourseDescription())
+                        .students(studentList)
+                        .build();
+                newCourseList.add(courseListResponseModel);
+            }
+        }
+        return new ResponseEntity<>(newCourseList, HttpStatus.OK);
     }
 }

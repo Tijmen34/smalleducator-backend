@@ -30,12 +30,17 @@ public class StudentController {
 
     /**
      * Endpoint to create a student.
-     * @param studentModel request object containing information of the student.
+     * @param createStudentRequestModel request object containing information of the student.
      * @return student id if the student was successfully created.
      */
     @PostMapping(value = "/student")
     public ResponseEntity<?> createStudent(@RequestBody CreateStudentRequestModel createStudentRequestModel) {
         return studentService.createStudent(createStudentRequestModel);
+    }
+
+    @GetMapping(value = "/student/{studentId}")
+    public ResponseEntity<?> getStudentById(@PathVariable int studentId) {
+        return studentService.getStudentById(studentId);
     }
 
     @PostMapping(value = "/student/{entryCode}")
