@@ -2,6 +2,7 @@ package com.hva.aad.SmallEducator.services;
 
 import com.hva.aad.SmallEducator.dao.TeacherRepository;
 import com.hva.aad.SmallEducator.models.TeacherModel;
+import com.hva.aad.SmallEducator.models.request.CreateTeacherRequestModel;
 import com.hva.aad.SmallEducator.models.request.TeacherLoginRequestModel;
 import com.hva.aad.SmallEducator.models.response.TeacherLoginResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,17 +31,24 @@ public class TeacherService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ResponseEntity<?> createTeacher(TeacherModel teacherModel) {
-        if (teacherModel.getFirstName() == null || teacherModel.getLastName() == null || teacherModel.getMailAddress() == null
-                || teacherModel.getPassword() == null || teacherModel.getUsername() == null) {
+    public ResponseEntity<?> createTeacher(CreateTeacherRequestModel createTeacherRequestModel) {
+        if (createTeacherRequestModel.getFirstName() == null || createTeacherRequestModel.getLastName() == null ||
+                createTeacherRequestModel.getMailAddress() == null
+                || createTeacherRequestModel.getPassword() == null || createTeacherRequestModel.getUsername() == null) {
             return new ResponseEntity<>("Not all fields are provided", HttpStatus.BAD_REQUEST);
         }
 
-        if (teacherRepository.existsByUsername(teacherModel.getUsername())) {
+        if (teacherRepository.existsByUsername(createTeacherRequestModel.getUsername())) {
             return new ResponseEntity<>("Username already exists.", HttpStatus.CONFLICT);
         }
+        TeacherModel teacherModel = TeacherModel.builder()
+                .firstName(createTeacherRequestModel.getFirstName())
+                .lastName(createTeacherRequestModel.getLastName())
+                .username(createTeacherRequestModel.getUsername())
+                .password(passwordEncoder.encode(createTeacherRequestModel.getPassword()))
+                .mailAddress(createTeacherRequestModel.getMailAddress())
+                .build();
 
-        teacherModel.setPassword(passwordEncoder.encode(teacherModel.getPassword()));
         teacherRepository.save(teacherModel);
         return new ResponseEntity<>(teacherModel.getId(), HttpStatus.OK);
     }

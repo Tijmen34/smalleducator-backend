@@ -1,6 +1,7 @@
 package com.hva.aad.SmallEducator.controllers;
 
 import com.hva.aad.SmallEducator.models.TeacherModel;
+import com.hva.aad.SmallEducator.models.request.CreateTeacherRequestModel;
 import com.hva.aad.SmallEducator.models.request.TeacherLoginRequestModel;
 import com.hva.aad.SmallEducator.services.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,8 @@ public class TeacherController {
      * @return teacher ID if the teacher is successfully created.
      */
     @PostMapping(value = "/")
-    public ResponseEntity<?> createTeacher(@RequestBody TeacherModel teacherModel) {
-        return teacherService.createTeacher(teacherModel);
+    public ResponseEntity<?> createTeacher(@RequestBody CreateTeacherRequestModel createTeacherRequestModel) {
+        return teacherService.createTeacher(createTeacherRequestModel);
     }
 
     @PostMapping(value = "/login")

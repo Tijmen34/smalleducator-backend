@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "\"Teacher\"")
 public class TeacherModel implements Serializable {
 
@@ -47,7 +49,7 @@ public class TeacherModel implements Serializable {
     private String mailAddress;
 
     @OneToMany(mappedBy = "teacher")
-    @JsonIgnoreProperties("teacher")
+    @JsonIgnoreProperties({"teacher"})
     private Set<CourseModel> courseList = new HashSet<>();
 
 }

@@ -1,6 +1,7 @@
 package com.hva.aad.SmallEducator.controllers;
 
 import com.hva.aad.SmallEducator.models.StudentModel;
+import com.hva.aad.SmallEducator.models.request.CreateStudentRequestModel;
 import com.hva.aad.SmallEducator.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +34,8 @@ public class StudentController {
      * @return student id if the student was successfully created.
      */
     @PostMapping(value = "/student")
-    public ResponseEntity<?> createStudent(@RequestBody StudentModel studentModel) {
-        return studentService.createStudent(studentModel);
+    public ResponseEntity<?> createStudent(@RequestBody CreateStudentRequestModel createStudentRequestModel) {
+        return studentService.createStudent(createStudentRequestModel);
     }
 
     @PostMapping(value = "/student/{entryCode}")
