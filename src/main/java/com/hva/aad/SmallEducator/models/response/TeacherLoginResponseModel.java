@@ -1,9 +1,9 @@
 package com.hva.aad.SmallEducator.models.response;
 
-import com.hva.aad.SmallEducator.models.CourseModel;
+import com.hva.aad.SmallEducator.models.Course;
 import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 
 @Data
 @Builder
@@ -12,5 +12,5 @@ public class TeacherLoginResponseModel {
     private String firstName;
     private String lastName;
     private String mailAddress;
-    private Set<CourseModel> courseList;
+    private List<Course> courseList;
 }

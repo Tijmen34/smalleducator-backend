@@ -1,15 +1,11 @@
 package com.hva.aad.SmallEducator.controllers;
 
-import com.hva.aad.SmallEducator.models.TeacherModel;
 import com.hva.aad.SmallEducator.models.request.CreateTeacherRequestModel;
 import com.hva.aad.SmallEducator.models.request.TeacherLoginRequestModel;
 import com.hva.aad.SmallEducator.services.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -17,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  *
  * @author Tijmen Stor & Burak Inan
  */
-@RequestMapping("teacher")
+@RequestMapping("/teacher")
 @RestController
 public class TeacherController {
 

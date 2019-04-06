@@ -1,6 +1,5 @@
 package com.hva.aad.SmallEducator.controllers;
 
-import com.hva.aad.SmallEducator.models.StudentModel;
 import com.hva.aad.SmallEducator.models.request.CreateStudentRequestModel;
 import com.hva.aad.SmallEducator.services.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;

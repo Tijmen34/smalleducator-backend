@@ -1,16 +1,22 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://localhost:3306/smalleducator
+    username: smalleducator
+    password: wild-password
+    hikari:
+      maximum-pool-size: 5
+    driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
       ddl-auto: update
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
-  datasource:
-    url: jdbc:mysql://localhost:3306/smalleducator
-    username: wild-username
-    password: wild-password
+    generate-ddl: true
+
 server:
   servlet:
     context-path: /api
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG

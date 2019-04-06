@@ -1,16 +1,15 @@
 package com.hva.aad.SmallEducator.services;
 
-import com.hva.aad.SmallEducator.dao.CourseRepository;
-import com.hva.aad.SmallEducator.dao.CourseStudentRepository;
-import com.hva.aad.SmallEducator.dao.StudentRepository;
-import com.hva.aad.SmallEducator.dao.TeacherRepository;
-import com.hva.aad.SmallEducator.models.CourseModel;
-import com.hva.aad.SmallEducator.models.TeacherModel;
 import com.hva.aad.SmallEducator.models.request.CourseStudentRequestModel;
-import com.hva.aad.SmallEducator.models.CourseStudentModel;
-import com.hva.aad.SmallEducator.models.StudentModel;
 import com.hva.aad.SmallEducator.models.request.CreateCourseRequestModel;
-import com.hva.aad.SmallEducator.models.response.CourseListResponseModel;
+import com.hva.aad.SmallEducator.dao.CourseDao;
+import com.hva.aad.SmallEducator.dao.CourseStudentDao;
+import com.hva.aad.SmallEducator.dao.StudentDao;
+import com.hva.aad.SmallEducator.dao.TeacherDao;
+import com.hva.aad.SmallEducator.models.Course;
+import com.hva.aad.SmallEducator.models.CourseStudent;
+import com.hva.aad.SmallEducator.models.Student;
+import com.hva.aad.SmallEducator.models.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,17 +25,17 @@ import java.util.*;
 @Service
 public class CourseService {
 
-    private final CourseRepository courseRepository;
-    private final StudentRepository studentRepository;
-    private final CourseStudentRepository courseStudentRepository;
-    private final TeacherRepository teacherRepository;
+    private final CourseDao courseDAO;
+    private final TeacherDao teacherDAO;
+    private final StudentDao studentDAO;
+    private final CourseStudentDao courseStudentDAO;
 
     @Autowired
-    public CourseService(final CourseRepository courseRepository, final StudentRepository studentRepository, final CourseStudentRepository courseStudentRepository, final TeacherRepository teacherRepository) {
-        this.courseRepository = courseRepository;
-        this.studentRepository = studentRepository;
-        this.courseStudentRepository = courseStudentRepository;
-        this.teacherRepository = teacherRepository;
+    public CourseService(CourseDao courseDAO, TeacherDao teacherDAO, StudentDao studentDAO, CourseStudentDao courseStudentDAO) {
+        this.courseDAO = courseDAO;
+        this.teacherDAO = teacherDAO;
+        this.studentDAO = studentDAO;
+        this.courseStudentDAO = courseStudentDAO;
     }
 
     public ResponseEntity<?> createCourse(final CreateCourseRequestModel courseModel) {
@@ -45,20 +44,25 @@ public class CourseService {
             return new ResponseEntity<>("Not all fields are provided", HttpStatus.BAD_REQUEST);
         }
 
-        if (courseRepository.existsByCourseCode(courseModel.getCourseCode())) {
+        if (courseDAO.existsByCourseCode(courseModel.getCourseCode())) {
             return new ResponseEntity<>("Course Code already exists.", HttpStatus.CONFLICT);
         }
 
-        final Optional<TeacherModel> teacherModel = teacherRepository.findById(courseModel.getTeacherId());
-        if (!teacherModel.isPresent()) {
-            return new ResponseEntity<>("Server failed to retrieve information.", HttpStatus.INTERNAL_SERVER_ERROR);
+        if(!teacherDAO.existsById(courseModel.getTeacherId())) {
+            return new ResponseEntity<>("Teacher does not exist.", HttpStatus.BAD_REQUEST);
         }
 
-        final CourseModel newCourse = new CourseModel(0, courseModel.getCourseName(),
-                courseModel.getCourseCode(), courseModel.getCourseDescription(),
-                teacherModel.get(), null);
-        courseRepository.save(newCourse);
-        return new ResponseEntity<>(newCourse.getId(), HttpStatus.OK);
+        Teacher teacher = teacherDAO.findById(courseModel.getTeacherId());
+
+        Course newCourse = Course.builder()
+                .courseName(courseModel.getCourseName())
+                .courseDescription(courseModel.getCourseDescription())
+                .courseCode(courseModel.getCourseCode())
+                .teacherId(teacher.getId())
+                .build();
+        int newCourseId = courseDAO.createCourse(newCourse);
+
+        return new ResponseEntity<>(newCourseId, HttpStatus.OK);
 
 
     }
@@ -69,64 +73,66 @@ public class CourseService {
             return new ResponseEntity<>("Not all fields are provided", HttpStatus.BAD_REQUEST);
         }
 
-        if (!studentRepository.existsById(courseStudentRequestModel.getStudentId())) {
+        if (!studentDAO.existsById(courseStudentRequestModel.getStudentId())) {
             return new ResponseEntity<>("Student not found.", HttpStatus.NOT_FOUND);
         }
 
-        if (!courseRepository.existsById(courseStudentRequestModel.getCourseId())) {
+        if (!courseDAO.existsById(courseStudentRequestModel.getCourseId())) {
             return new ResponseEntity<>("Course not found.", HttpStatus.NOT_FOUND);
         }
 
-        if (courseStudentRepository.existsByCourse_IdAndStudent_Id(courseStudentRequestModel.getCourseId(),
+        if (courseStudentDAO.existsByCourseIdAndStudentId(courseStudentRequestModel.getCourseId(),
                 courseStudentRequestModel.getStudentId())) {
             return new ResponseEntity<>("Student already belongs to the course", HttpStatus.CONFLICT);
         }
 
-        final Optional<CourseModel> courseModel = courseRepository.findById(courseStudentRequestModel.getCourseId());
-        final Optional<StudentModel> studentModel = studentRepository.findById(courseStudentRequestModel.getStudentId());
+        Course course = courseDAO.findById(courseStudentRequestModel.getCourseId());
+        Student student = studentDAO.findStudentById(courseStudentRequestModel.getStudentId());
 
-        if (!courseModel.isPresent()
-                || !studentModel.isPresent()) {
-            return new ResponseEntity<>("Server failed to retrieve information.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        CourseStudent newCourseStudent = CourseStudent.builder()
+                .courseId(course.getId())
+                .studentId(student.getId())
+                .studentEntryCode(UUID.randomUUID().toString())
+                .build();
 
-        final CourseStudentModel newCourseStudentModel = new CourseStudentModel(0, studentModel.get(), courseModel.get(), UUID.randomUUID().toString());
-        courseStudentRepository.save(newCourseStudentModel);
-        return new ResponseEntity<>(newCourseStudentModel.getStudentEntryCode(), HttpStatus.OK);
+        courseStudentDAO.createCourseStudent(newCourseStudent);
+
+        return new ResponseEntity<>(newCourseStudent.getStudentEntryCode(), HttpStatus.OK);
     }
 
     public ResponseEntity<?> getCoursesByTeacher(int teacherId) {
-        Optional<List<CourseModel>> courseList = courseRepository.findAllByTeacherId(teacherId);
-        if (!courseList.isPresent()) {
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
-        }
-        List<CourseListResponseModel> newCourseList = new ArrayList<>();
-        for (int i = 0; i < courseList.get().size(); i++) {
-            Optional<List<CourseStudentModel>> courseStudentModels = courseStudentRepository.findAllByCourse_Id(courseList.get().get(i).getId());
-            if (!courseStudentModels.isPresent()) {
-                CourseListResponseModel courseListResponseModel = CourseListResponseModel.builder()
-                        .id(courseList.get().get(i).getId())
-                        .courseName(courseList.get().get(i).getCourseName())
-                        .courseCode(courseList.get().get(i).getCourseCode())
-                        .courseDescription(courseList.get().get(i).getCourseDescription())
-                        .students(new ArrayList<>())
-                        .build();
-                newCourseList.add(courseListResponseModel);
-            } else {
-                List<StudentModel> studentList = new ArrayList<>();
-                for (int j = 0; j < courseStudentModels.get().size(); j++) {
-                    studentList.add(courseStudentModels.get().get(j).getStudent());
-                }
-                CourseListResponseModel courseListResponseModel = CourseListResponseModel.builder()
-                        .id(courseList.get().get(i).getId())
-                        .courseName(courseList.get().get(i).getCourseName())
-                        .courseCode(courseList.get().get(i).getCourseCode())
-                        .courseDescription(courseList.get().get(i).getCourseDescription())
-                        .students(studentList)
-                        .build();
-                newCourseList.add(courseListResponseModel);
-            }
-        }
-        return new ResponseEntity<>(newCourseList, HttpStatus.OK);
+        List<Course> courseList = courseDAO.findAllByTeacherId(teacherId);
+//        if(courseList.size() == 0) {
+//            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
+//        }
+//
+//        List<CourseListResponseModel> newCourseList = new ArrayList<>();
+//        for (int i = 0; i < courseList.get().size(); i++) {
+//            Optional<List<CourseStudentModel>> courseStudentModels = courseStudentRepository.findAllByCourse_Id(courseList.get().get(i).getId());
+//            if (!courseStudentModels.isPresent()) {
+//                CourseListResponseModel courseListResponseModel = CourseListResponseModel.builder()
+//                        .id(courseList.get().get(i).getId())
+//                        .courseName(courseList.get().get(i).getCourseName())
+//                        .courseCode(courseList.get().get(i).getCourseCode())
+//                        .courseDescription(courseList.get().get(i).getCourseDescription())
+//                        .students(new ArrayList<>())
+//                        .build();
+//                newCourseList.add(courseListResponseModel);
+//            } else {
+//                List<StudentModel> studentList = new ArrayList<>();
+//                for (int j = 0; j < courseStudentModels.get().size(); j++) {
+//                    studentList.add(courseStudentModels.get().get(j).getStudent());
+//                }
+//                CourseListResponseModel courseListResponseModel = CourseListResponseModel.builder()
+//                        .id(courseList.get().get(i).getId())
+//                        .courseName(courseList.get().get(i).getCourseName())
+//                        .courseCode(courseList.get().get(i).getCourseCode())
+//                        .courseDescription(courseList.get().get(i).getCourseDescription())
+//                        .students(studentList)
+//                        .build();
+//                newCourseList.add(courseListResponseModel);
+//            }
+//        }
+        return new ResponseEntity<>(courseList, HttpStatus.OK);
     }
 }
