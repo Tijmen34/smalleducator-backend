@@ -1,7 +1,9 @@
 package com.hva.aad.SmallEducator.dao;
 
 import com.hva.aad.SmallEducator.models.Course;
+import com.hva.aad.SmallEducator.models.Lesson;
 import com.hva.aad.SmallEducator.rowmappers.CourseRowMapper;
+import com.hva.aad.SmallEducator.rowmappers.LessonRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -40,5 +42,18 @@ public class CourseDao {
     public List<Course> findAllByTeacherId(int teacherId) {
         return jdbcTemplate.query("SELECT * FROM course WHERE teacher_id = ?",
                 new Object[]{teacherId}, new CourseRowMapper());
+    }
+
+    public void deleteByCourseId(int courseId) {
+        List<Lesson> lessonList = jdbcTemplate.query("SELECT * FROM lesson WHERE course_id = ?",
+                new Object[]{courseId}, new LessonRowMapper());
+
+        for (Lesson lesson : lessonList) {
+            jdbcTemplate.update("DELETE FROM dialog WHERE lesson_id = ?", lesson.getId());
+            jdbcTemplate.update("DELETE FROM flashcard WHERE lesson_id = ?", lesson.getId());
+            jdbcTemplate.update("DELETE FROM lesson WHERE lesson_id = ?", lesson.getId());
+        }
+        jdbcTemplate.update("DELETE FROM course_has_student WHERE course_id = ?", courseId);
+        jdbcTemplate.update("DELETE FROM course WHERE course_id = ?", courseId);
     }
 }

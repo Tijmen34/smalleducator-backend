@@ -55,4 +55,12 @@ public class CourseController {
     public ResponseEntity<?> getCoursesByTeacher(@PathVariable int teacherId) {
         return courseService.getCoursesByTeacher(teacherId);
     }
+
+    /**
+     * Endpoint to delete a course.
+     */
+    @DeleteMapping(value = "/course/{courseId}")
+    public ResponseEntity<?> deleteCourse(@PathVariable int courseId) {
+        return courseService.deleteCourse(courseId);
+    }
 }

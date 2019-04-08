@@ -102,37 +102,14 @@ public class CourseService {
 
     public ResponseEntity<?> getCoursesByTeacher(int teacherId) {
         List<Course> courseList = courseDAO.findAllByTeacherId(teacherId);
-//        if(courseList.size() == 0) {
-//            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
-//        }
-//
-//        List<CourseListResponseModel> newCourseList = new ArrayList<>();
-//        for (int i = 0; i < courseList.get().size(); i++) {
-//            Optional<List<CourseStudentModel>> courseStudentModels = courseStudentRepository.findAllByCourse_Id(courseList.get().get(i).getId());
-//            if (!courseStudentModels.isPresent()) {
-//                CourseListResponseModel courseListResponseModel = CourseListResponseModel.builder()
-//                        .id(courseList.get().get(i).getId())
-//                        .courseName(courseList.get().get(i).getCourseName())
-//                        .courseCode(courseList.get().get(i).getCourseCode())
-//                        .courseDescription(courseList.get().get(i).getCourseDescription())
-//                        .students(new ArrayList<>())
-//                        .build();
-//                newCourseList.add(courseListResponseModel);
-//            } else {
-//                List<StudentModel> studentList = new ArrayList<>();
-//                for (int j = 0; j < courseStudentModels.get().size(); j++) {
-//                    studentList.add(courseStudentModels.get().get(j).getStudent());
-//                }
-//                CourseListResponseModel courseListResponseModel = CourseListResponseModel.builder()
-//                        .id(courseList.get().get(i).getId())
-//                        .courseName(courseList.get().get(i).getCourseName())
-//                        .courseCode(courseList.get().get(i).getCourseCode())
-//                        .courseDescription(courseList.get().get(i).getCourseDescription())
-//                        .students(studentList)
-//                        .build();
-//                newCourseList.add(courseListResponseModel);
-//            }
-//        }
         return new ResponseEntity<>(courseList, HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> deleteCourse(int courseId) {
+        if (!courseDAO.existsById(courseId)) {
+            return new ResponseEntity<>("Course not found.", HttpStatus.NOT_FOUND);
+        }
+        courseDAO.deleteByCourseId(courseId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
